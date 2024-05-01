@@ -5,7 +5,7 @@
 
 ## WRRC
 Add an image of your WRRC here
-!["WRRC"](./images/wrrc.jpeg)
+!["WRRC"](./images/752226ce-f2d6-449c-b69b-110956ef49b4.jpg)
 
 ## Overview
 
@@ -25,4 +25,13 @@ Add an image of your WRRC here
 * make status
 * make axios
 * git API
+
+# DataBases:
+## creating started:'sqlstart', 'psql', '/l'=> to see List of databases
+## create Db : CREATE DATABASE databasename;
+# \q => to quit psql
+ # creating the table:
+ ## create a 'schema.sql' file 
+ ## client.connect().then() => //i write this to listen me after the user connect
+
 
