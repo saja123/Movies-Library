@@ -23,22 +23,60 @@ function Movie(title, release_date, poster_path, overview) {
     this.release_date = release_date;
     this.poster_path = poster_path;
     this.overview = overview;
-}
-
+}                                                                                       
+// Routs for the API
 server.get("/", handleHomepage);
 server.get("/favorite", handleFavoritePage);
-server.get("/trending", handleTrendingMovies); // Use lowercase for consistency
+server.get("/trending", handleTrendingMovies); // Use lowercase for consistency  
+
+//routing CRUD for DB
 server.post('/addMovie', handleAdd);
 server.get("/getMovies", handleGetMovies);
+server.put("/UPDATE/:id", handleUpdateid);
+server.delete("/DELETE/:id", handleDeleteid);
+
+// server.get('/search', (req, res) => { //example using query
+//     // Accessing query parameters using req.query
+//     const searchTerm = req.query.name;
+//     res.send(`Search Query: ${searchTerm}`);
+// });
 
 server.use(handle404page);
 server.use(handle500page);
+
+
+// type of http url 
+// qurey, params, body
+//DB
+
+
+function handleDeleteid(req, res) {
+    const id = req.params.id;
+    const sql = `DELETE FROM Movie WHERE id=${id};`
+    client.query(sql).then((result)=>{
+        console.log(result.rows);
+        return res.json("Delete the item successfull");
+        // return res.json(result.rows)
+    }).catch((error) => {
+        handle500page(error, req, res);
+    })
+}
+
+function handleUpdateid(req, res) {
+    const id = req.params.id;
+    const { title, release_date, poster_path, overview } = req.body;
+    const sql = `UPDATE Movie SET title='${title}', release_date='${release_date}', poster_path='${poster_path}', overview='${overview}' WHERE id=${id} RETURNING *;`
+    client.query(sql).then((result)=>{
+        return res.json(result.rows);
+    }).catch((error) => {
+        handle500page(error, req, res);
+    })
+}
 
 async function handleHomepage(req, res) {
     const data = new Movie(dataInfo.title, dataInfo.poster_path, dataInfo.overview);
     res.status(200).json(data);
 }
-
 
 function handleAdd(req, res) {
     console.log(req.body);
@@ -47,7 +85,7 @@ function handleAdd(req, res) {
     let values = [title, release_date, poster_path, overview];
     client.query(sql, values).then((result) => {
         console.log(result.rows);
-        return res.status(201).json(result.rows[0]); // result.rows If I type like this it return array of object || result.rows[0] if type like this it return the object that inside the array 
+        return res.status(201).json(result.rows); // result.rows If I type like this it return array of object || result.rows[0] if type like this it return the object that inside the array 
     }).catch((error) => {
         handle500page(error, req, res);
     })
@@ -56,9 +94,8 @@ function handleAdd(req, res) {
 function handleGetMovies(req, res) {
     let sql = 'SELECT * from Movie;'
     client.query(sql).then((result) => { //i but just sql beacuse i want to read data beacuse that i am not write like this (sql, values)
-        console.log(result);
+        // console.log(result);
         res.json(result.rows);
-
     }).catch((error) => {
         handle500page(error, req, res);
     })
@@ -91,6 +128,7 @@ server.get('/search', async (req, res) => { //the function have a time
         res.status(500).json({ error: 'Error searching for movie' });
     }
 });
+
 
 function handleFavoritePage(req, res) {
     res.status(200).send("Welcome to Favorite Page");
