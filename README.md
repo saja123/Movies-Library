@@ -34,4 +34,6 @@ Add an image of your WRRC here
  ## create a 'schema.sql' file 
  ## client.connect().then() => //i write this to listen me after the user connect
 
+### make add and update using body and params
+
 
