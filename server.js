@@ -61,16 +61,17 @@ function handleDeleteid(req, res) {
         handle500page(error, req, res);
     })
 }
-
-let id = req.params.id;
-let { comment } = req.body;
-let sql = `UPDATE movies SET comment=$1 WHERE id=$2 RETURNING *;`;
-const params = [comment, id];
-client.query(sql, params).then((result) => {
-    return res.json(result.rows[0]);
-}).catch((error) => {
-    errorHandler(error, req, res);
-});
+function handleUpdateid (req, res) {
+    let id = req.params.id;
+    let { comment } = req.body;
+    let sql = `UPDATE movies SET comment=$1 WHERE id=$2 RETURNING *;`;
+    const params = [comment, id];
+    client.query(sql, params).then((result) => {
+        return res.json(result.rows[0]);
+    }).catch((error) => {
+        errorHandler(error, req, res);
+    });
+}
 
 async function handleHomepage(req, res) {
     const data = new Movie(dataInfo.title, dataInfo.poster_path, dataInfo.overview);
