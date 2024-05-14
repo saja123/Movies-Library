@@ -23,7 +23,7 @@ function Movie(title, release_date, poster_path, overview) {
     this.release_date = release_date;
     this.poster_path = poster_path;
     this.overview = overview;
-}                                                                                       
+}
 // Routs for the API
 server.get("/", handleHomepage);
 server.get("/favorite", handleFavoritePage);
@@ -53,7 +53,7 @@ server.use(handle500page);
 function handleDeleteid(req, res) {
     const id = req.params.id;
     const sql = `DELETE FROM Movie WHERE id=${id};`
-    client.query(sql).then((result)=>{
+    client.query(sql).then((result) => {
         console.log(result.rows);
         return res.json("Delete the item successfull");
         // return res.json(result.rows)
@@ -62,16 +62,15 @@ function handleDeleteid(req, res) {
     })
 }
 
-function handleUpdateid(req, res) {
-    const id = req.params.id;
-    const { title, release_date, poster_path, overview } = req.body;
-    const sql = `UPDATE Movie SET title='${title}', release_date='${release_date}', poster_path='${poster_path}', overview='${overview}' WHERE id=${id} RETURNING *;`
-    client.query(sql).then((result)=>{
-        return res.json(result.rows);
-    }).catch((error) => {
-        handle500page(error, req, res);
-    })
-}
+let id = req.params.id;
+let { comment } = req.body;
+let sql = `UPDATE movies SET comment=$1 WHERE id=$2 RETURNING *;`;
+const params = [comment, id];
+client.query(sql, params).then((result) => {
+    return res.json(result.rows[0]);
+}).catch((error) => {
+    errorHandler(error, req, res);
+});
 
 async function handleHomepage(req, res) {
     const data = new Movie(dataInfo.title, dataInfo.poster_path, dataInfo.overview);
@@ -80,7 +79,7 @@ async function handleHomepage(req, res) {
 
 function handleAdd(req, res) {
     console.log(req.body);
-    const {title, release_date, poster_path, overview } = req.body;
+    const { title, release_date, poster_path, overview } = req.body;
     let sql = 'INSERT INTO Movie(title, release_date, poster_path, overview ) VALUES($1, $2, $3, $4) RETURNING *;' //RETURNING * Its mean return the value that was added in DB
     let values = [title, release_date, poster_path, overview];
     client.query(sql, values).then((result) => {
