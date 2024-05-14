@@ -4,6 +4,7 @@ const cors = require("cors");
 const axios = require("axios");
 const pg = require("pg");
 const dataInfo = require("./Data/data.json");
+// const dataInfo = require("./Data/data.json");
 
 const server = express();
 server.use(cors());
@@ -62,15 +63,19 @@ function handleDeleteid(req, res) {
     })
 }
 
-let id = req.params.id;
-let { comment } = req.body;
-let sql = `UPDATE movies SET comment=$1 WHERE id=$2 RETURNING *;`;
-const params = [comment, id];
-client.query(sql, params).then((result) => {
-    return res.json(result.rows[0]);
-}).catch((error) => {
-    errorHandler(error, req, res);
-});
+
+function handleUpdateid (req, res) {
+    let id = req.params.id;
+    let { comment } = req.body;
+    let sql = `UPDATE movies SET comment=$1 WHERE id=$2 RETURNING *;`;
+    const params = [comment, id];
+    client.query(sql, params).then((result) => {
+        return res.json(result.rows[0]);
+    }).catch((error) => {
+        errorHandler(error, req, res);
+    });
+}
+
 
 async function handleHomepage(req, res) {
     const data = new Movie(dataInfo.title, dataInfo.poster_path, dataInfo.overview);
@@ -146,4 +151,15 @@ client.connect().then(() => { //i write this to listen me after the user connect
         console.log(`The server is up and listening on port ${port}`);
     });
 })
+
+// client.connect().then(() => { //i write this to listen me after the user connect to db
+//     server.listen(port, () => {
+//         console.log(`The server is up and listening on port ${port}`);
+//     });
+// })
+// client.connect().then(() => { //i write this to listen me after the user connect to db
+//     server.listen(port, () => {
+//         console.log(`The server is up and listening on port ${port}`);
+//     });
+// })
 
