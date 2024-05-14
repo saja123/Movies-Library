@@ -61,6 +61,11 @@ function handleDeleteid(req, res) {
         handle500page(error, req, res);
     })
 }
+
+
+
+
+
 function handleUpdateid (req, res) {
     let id = req.params.id;
     let { comment } = req.body;
@@ -72,6 +77,9 @@ function handleUpdateid (req, res) {
         errorHandler(error, req, res);
     });
 }
+
+
+
 
 async function handleHomepage(req, res) {
     const data = new Movie(dataInfo.title, dataInfo.poster_path, dataInfo.overview);
