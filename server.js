@@ -63,9 +63,6 @@ function handleDeleteid(req, res) {
 }
 
 
-
-
-
 function handleUpdateid (req, res) {
     let id = req.params.id;
     let { comment } = req.body;
@@ -77,8 +74,6 @@ function handleUpdateid (req, res) {
         errorHandler(error, req, res);
     });
 }
-
-
 
 
 async function handleHomepage(req, res) {
