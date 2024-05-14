@@ -4,6 +4,7 @@ const cors = require("cors");
 const axios = require("axios");
 const pg = require("pg");
 const dataInfo = require("./Data/data.json");
+// const dataInfo = require("./Data/data.json");
 
 const server = express();
 server.use(cors());
@@ -150,4 +151,15 @@ client.connect().then(() => { //i write this to listen me after the user connect
         console.log(`The server is up and listening on port ${port}`);
     });
 })
+
+// client.connect().then(() => { //i write this to listen me after the user connect to db
+//     server.listen(port, () => {
+//         console.log(`The server is up and listening on port ${port}`);
+//     });
+// })
+// client.connect().then(() => { //i write this to listen me after the user connect to db
+//     server.listen(port, () => {
+//         console.log(`The server is up and listening on port ${port}`);
+//     });
+// })
 
